@@ -138,7 +138,7 @@ const Storyboard = () => {
                   <div className="flex items-stretch gap-4 h-full w-max">
                       {activeShots.map((shot, index) => (
                           <ShotCard 
-                            key={shot.id} 
+                            key={`${shot.id}-${shot.image}`} 
                             shot={shot} 
                             index={index} 
                             onUpdateShotImage={handleUpdateShotImage}
