@@ -6,12 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Lightbulb, FileText, PlayCircle } from "lucide-react";
 import IdeaModal from "@/components/IdeaModal";
+import NewProjectModal from "@/components/dashboard/NewProjectModal";
 
 const Dashboard = () => {
   const [isIdeaModalOpen, setIsIdeaModalOpen] = React.useState(false);
+  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const handleIdeaSuccess = () => {
+    navigate('/script-editor');
+  };
+
+  const handleNewProjectSuccess = () => {
     navigate('/script-editor');
   };
 
@@ -21,6 +27,11 @@ const Dashboard = () => {
         open={isIdeaModalOpen} 
         onOpenChange={setIsIdeaModalOpen}
         onSuccess={handleIdeaSuccess}
+      />
+      <NewProjectModal
+        open={isNewProjectModalOpen}
+        onOpenChange={setIsNewProjectModalOpen}
+        onSuccess={handleNewProjectSuccess}
       />
       <div className="animate-in fade-in-50 space-y-10">
         {/* Welcome Section */}
@@ -60,7 +71,7 @@ const Dashboard = () => {
               <div>
                 <h3 className="text-xl font-bold text-white">Start with a script</h3>
                 <p className="text-gray-400 mt-1 text-sm">Input your script, or a synopsis, to generate them precisely as written</p>
-                <Button onClick={() => navigate('/script-editor')} className="mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-md">
+                <Button onClick={() => setIsNewProjectModalOpen(true)} className="mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-md">
                   Input Scripts 🪄
                 </Button>
               </div>
