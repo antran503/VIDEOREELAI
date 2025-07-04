@@ -2,15 +2,24 @@ import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import CreatePostSchedule from "@/components/schedule/CreatePostSchedule";
 
 const ContentSchedule = () => {
+  const [isCreating, setIsCreating] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(new Date("2025-07-03"));
+
+  if (isCreating) {
+    return <CreatePostSchedule onBack={() => setIsCreating(false)} />;
+  }
 
   return (
     <div className="animate-in fade-in-50">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-white">Content Schedule</h1>
-        <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold">
+        <Button 
+          onClick={() => setIsCreating(true)}
+          className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold"
+        >
           <Plus className="mr-2 h-4 w-4" /> Create Post Schedule
         </Button>
       </div>
