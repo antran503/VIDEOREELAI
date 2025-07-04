@@ -1,10 +1,10 @@
+/// <reference types="https://deno.land/x/deno/cli/types/deno.d.ts" />
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 // IMPORTANT: This is a placeholder for Google's actual image generation API endpoint.
 // You may need to update this URL based on the specific Google service you are using (e.g., Vertex AI, Imagen).
 const GOOGLE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent'; // This is for text, you'll need to find the correct image generation endpoint.
-// A more realistic (but hypothetical) endpoint might look like:
-// const GOOGLE_API_URL = 'https://vision.googleapis.com/v1/images:generate';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -32,7 +32,6 @@ serve(async (req) => {
 
     // 3. Call the Google API
     // NOTE: The structure of this payload will depend on Google's specific API.
-    // This is a hypothetical example. You will need to adjust it.
     const response = await fetch(`${GOOGLE_API_URL}?key=${googleApiKey}`, {
       method: 'POST',
       headers: {
@@ -50,26 +49,32 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorBody = await response.text();
-      throw new Error(`Google API request failed: ${response.status} ${errorBody}`);
+      console.error("Google API Error:", errorBody);
+      throw new Error(`Google API request failed: ${response.status}`);
     }
 
     const data = await response.json();
+    console.log("Received data from Google API:", JSON.stringify(data, null, 2));
 
-    // 4. Return the result to the client
-    // NOTE: The path to the image URL will depend on Google's API response structure.
-    // e.g., data.imageUrl, data.images[0].url, etc.
-    // Since we are using a text model as a placeholder, we'll return a mock success message.
-    const imageUrl = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "https://i.imgur.com/9yV4aG2.png";
-    
-    // In a real scenario, you'd extract the image URL. For now, we return a placeholder on success.
-    const mockImageUrl = "https://i.imgur.com/9yV4aG2.png";
+    // 4. Attempt to find an image URL in the response.
+    // THIS IS A GUESS. The actual path depends on the specific Google Image API response.
+    // We will log the full `data` object to help find the correct path.
+    const placeholderImageUrl = "https://i.imgur.com/9yV4aG2.png";
+    const imageUrl = data?.imageUrl || data?.images?.[0]?.url || data?.data?.[0]?.url || placeholderImageUrl;
 
-    return new Response(JSON.stringify({ imageUrl: mockImageUrl }), {
+    if (imageUrl === placeholderImageUrl) {
+      console.warn("Could not find a valid image URL in the Google API response. Using placeholder image.");
+    } else {
+      console.log("Successfully extracted image URL:", imageUrl);
+    }
+
+    return new Response(JSON.stringify({ imageUrl: imageUrl }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
 
   } catch (error) {
+    console.error("Error in Edge Function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
