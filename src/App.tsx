@@ -5,6 +5,7 @@ import Projects from "./pages/Projects";
 import Characters from "./pages/Characters";
 import ContentSchedule from "./pages/ContentSchedule";
 import Integrations from "./pages/Integrations";
+import Settings from "./pages/Settings";
 import ScriptEditor from "./pages/ScriptEditor";
 import ShotEditor from "./pages/ShotEditorPage";
 import Storyboard from "./pages/Storyboard";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/characters" element={<Characters />} />
             <Route path="/schedule" element={<ContentSchedule />} />
             <Route path="/integrations" element={<Integrations />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
           
           {/* Các trang không có layout chính */}

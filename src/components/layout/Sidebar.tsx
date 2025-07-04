@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Clapperboard, Users, CalendarDays, Plug, PlayCircle } from "lucide-react";
+import { LayoutDashboard, Clapperboard, Users, CalendarDays, Plug, PlayCircle, Settings } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const navItems = [
   { to: "/characters", label: "Characters", icon: Users },
   { to: "/schedule", label: "Content Schedule", icon: CalendarDays },
   { to: "/integrations", label: "Integration", icon: Plug },
+  { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 const Sidebar = () => (
