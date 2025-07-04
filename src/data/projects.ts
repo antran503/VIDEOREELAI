@@ -5,5 +5,6 @@ export const projects = [
     status: 'Awaiting Customization',
     scenes: 7,
     image: 'https://i.imgur.com/4YjD2M5.png',
+    date: '7/4/2025',
   }
 ];
