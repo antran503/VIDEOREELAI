@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { countries } from "@/data/countries";
+import { languages } from "@/data/languages";
 
 const recommendedIdeas = [
   {
@@ -77,27 +79,27 @@ const IdeaModal = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open:
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Country</label>
-              <Select defaultValue="united-states">
+              <Select defaultValue="US">
                 <SelectTrigger className="w-full bg-[#2A2A33] border-gray-600 focus:ring-purple-500">
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1C1C22] border-gray-700 text-white">
-                  <SelectItem value="united-states">United States</SelectItem>
-                  <SelectItem value="united-kingdom">United Kingdom</SelectItem>
-                  <SelectItem value="canada">Canada</SelectItem>
+                <SelectContent className="bg-[#1C1C22] border-gray-700 text-white max-h-[200px]">
+                  {countries.map((country) => (
+                    <SelectItem key={country.code} value={country.code}>{country.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Language</label>
-              <Select defaultValue="english">
+              <Select defaultValue="en">
                 <SelectTrigger className="w-full bg-[#2A2A33] border-gray-600 focus:ring-purple-500">
                   <SelectValue placeholder="Select a language" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1C1C22] border-gray-700 text-white">
-                  <SelectItem value="english">English</SelectItem>
-                  <SelectItem value="spanish">Spanish</SelectItem>
-                  <SelectItem value="french">French</SelectItem>
+                <SelectContent className="bg-[#1C1C22] border-gray-700 text-white max-h-[200px]">
+                  {languages.map((language) => (
+                    <SelectItem key={language.code} value={language.code}>{language.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
