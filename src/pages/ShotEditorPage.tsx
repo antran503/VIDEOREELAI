@@ -1,8 +1,7 @@
 import LeftPanel from "@/components/shot-editor/LeftPanel";
 import RightPanel from "@/components/shot-editor/RightPanel";
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
-import { PlayCircle, SkipBack, SkipForward } from "lucide-react";
+import { User, Play, PlayCircle, SkipBack, SkipForward } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
