@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Home, FolderKanban, Users, CalendarDays, Settings, PlayCircle } from "lucide-react";
 
 const Sidebar = () => {
@@ -15,7 +15,7 @@ const Sidebar = () => {
           <SidebarLink to="/" icon={<Home className="h-5 w-5" />}>
             Dashboard
           </SidebarLink>
-          <SidebarLink to="/projects" icon={<FolderKanban className="h-5 w-5" />}>
+          <SidebarLink to="/projects" icon={<FolderKanban className="h-5 w-5" />} extraActivePaths={["/script-editor"]}>
             Projects
           </SidebarLink>
           <SidebarLink to="/characters" icon={<Users className="h-5 w-5" />}>
@@ -33,12 +33,15 @@ const Sidebar = () => {
   );
 };
 
-const SidebarLink = ({ to, icon, children }: { to: string; icon: React.ReactNode; children: React.ReactNode }) => {
+const SidebarLink = ({ to, icon, children, extraActivePaths = [] }: { to: string; icon: React.ReactNode; children: React.ReactNode; extraActivePaths?: string[] }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to || extraActivePaths.some(path => location.pathname.startsWith(path));
+
   return (
     <NavLink
       to={to}
-      end
-      className={({ isActive }) =>
+      end={to === "/"}
+      className={
         `flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-white ${
           isActive ? "bg-[#E54660] text-white" : "hover:bg-gray-800"
         }`

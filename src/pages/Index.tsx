@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -7,6 +8,11 @@ import IdeaModal from "@/components/IdeaModal";
 
 const Index = () => {
   const [isIdeaModalOpen, setIsIdeaModalOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleGenerationSuccess = () => {
+    navigate("/script-editor");
+  };
 
   return (
     <DashboardLayout>
@@ -68,7 +74,7 @@ const Index = () => {
         </div>
       </div>
       
-      <IdeaModal open={isIdeaModalOpen} onOpenChange={setIsIdeaModalOpen} />
+      <IdeaModal open={isIdeaModalOpen} onOpenChange={setIsIdeaModalOpen} onSuccess={handleGenerationSuccess} />
     </DashboardLayout>
   );
 };

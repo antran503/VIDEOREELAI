@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Loader2 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { languages } from "@/data/languages";
 
@@ -34,7 +35,24 @@ const recommendedIdeas = [
   },
 ];
 
-const IdeaModal = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) => {
+interface IdeaModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
+}
+
+const IdeaModal = ({ open, onOpenChange, onSuccess }: IdeaModalProps) => {
+  const [isProcessing, setIsProcessing] = React.useState(false);
+
+  const handleNextClick = async () => {
+    setIsProcessing(true);
+    // Giả lập cuộc gọi API để tạo kịch bản
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    setIsProcessing(false);
+    onOpenChange(false); // Đóng modal
+    onSuccess(); // Điều hướng đến trang soạn thảo kịch bản
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1C1C22] border-gray-700 text-white sm:max-w-[650px] p-0 rounded-lg">
@@ -106,8 +124,20 @@ const IdeaModal = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open:
           </div>
         </div>
         <DialogFooter className="bg-[#16161A] p-4 flex justify-end rounded-b-lg">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-600 hover:bg-gray-700 text-white">Cancel</Button>
-          <Button className="bg-gray-300 hover:bg-gray-400 text-black font-semibold">Next <ChevronRight className="ml-1 h-4 w-4" /></Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-600 hover:bg-gray-700 text-white" disabled={isProcessing}>Cancel</Button>
+          <Button 
+            className="bg-gray-300 hover:bg-gray-400 text-black font-semibold w-[90px]"
+            onClick={handleNextClick}
+            disabled={isProcessing}
+          >
+            {isProcessing ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <>
+                Next <ChevronRight className="ml-1 h-4 w-4" />
+              </>
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

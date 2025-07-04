@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import ScriptEditor from "./pages/ScriptEditor";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/characters" element={<Index />} />
           <Route path="/schedule" element={<Index />} />
           <Route path="/integration" element={<Index />} />
+          <Route path="/script-editor" element={<ScriptEditor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
