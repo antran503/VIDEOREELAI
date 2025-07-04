@@ -1,38 +1,38 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import ScriptEditor from "./pages/ScriptEditor";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import Dashboard from "./pages/Index";
 import Projects from "./pages/Projects";
+import Characters from "./pages/Characters";
+import ContentSchedule from "./pages/ContentSchedule";
+import Integrations from "./pages/Integrations";
+import ScriptEditor from "./pages/ScriptEditor";
+import ShotEditor from "./pages/ShotEditor";
 import Storyboard from "./pages/Storyboard";
-import ShotEditorPage from "./pages/ShotEditorPage";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+function App() {
+  return (
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+      <Router>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* Placeholder routes for sidebar navigation */}
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/characters" element={<Index />} />
-          <Route path="/schedule" element={<Index />} />
-          <Route path="/integration" element={<Index />} />
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/characters" element={<Characters />} />
+            <Route path="/schedule" element={<ContentSchedule />} />
+            <Route path="/integrations" element={<Integrations />} />
+          </Route>
+          
+          {/* Các trang không có layout chính */}
           <Route path="/script-editor" element={<ScriptEditor />} />
+          <Route path="/shot-editor" element={<ShotEditor />} />
           <Route path="/storyboard" element={<Storyboard />} />
-          <Route path="/shot-editor" element={<ShotEditorPage />} />
-          <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
+      <Toaster />
     </TooltipProvider>
-  </QueryClientProvider>
-);
+  );
+}
 
 export default App;
