@@ -8,4 +8,7 @@ export const lightingOptions = [
   { value: "practical", label: "Practical Lights" },
   { value: "high-key", label: "High Key Lighting" },
   { value: "low-key", label: "Low Key Lighting" },
+  { value: "motivated", label: "Motivated Lighting" },
+  { value: "three-point", label: "Three-Point Lighting" },
+  { value: "bounce", label: "Bounce Lighting" },
 ];

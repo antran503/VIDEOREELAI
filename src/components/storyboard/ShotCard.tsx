@@ -78,7 +78,7 @@ const ShotCard = ({ shot, index }: { shot: any, index: number }) => {
         </Button>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" className="text-xs text-white hover:bg-gray-700 hover:text-white w-full" onClick={() => navigate('/shot-editor')}>
+            <Button size="sm" className="text-xs text-white bg-pink-600 hover:bg-pink-700 w-full" onClick={() => navigate('/shot-editor')}>
               <Pencil className="mr-2 h-3 w-3" /> Shot editor
             </Button>
           </TooltipTrigger>
