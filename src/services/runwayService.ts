@@ -1,11 +1,14 @@
-import { Runway } from "@runwayml/sdk";
+import { RunwayML } from "@runwayml/sdk";
 
 // LƯU Ý QUAN TRỌNG: Trong một ứng dụng thực tế, API key này nên được lưu trữ an toàn
 // trên một máy chủ backend và không nên để lộ trong mã nguồn frontend.
 // Vì mục đích demo, tôi sẽ sử dụng key bạn đã cung cấp.
 const RUNWAY_API_KEY = "BoC1SEOiYbqsoj0ZKlY4q3HX0bAJaEN7";
 
-const runway = new Runway({ apiKey: RUNWAY_API_KEY });
+const runway = new RunwayML({
+  runway_host: "https://api.runwayml.com",
+  runway_token: RUNWAY_API_KEY,
+});
 
 /**
  * Tạo ảnh từ một đoạn văn bản prompt bằng Runway API.
@@ -16,7 +19,7 @@ export const generateImageFromPrompt = async (prompt: string): Promise<string> =
   try {
     // Sử dụng một model text-to-image phổ biến. Tên model này có thể cần
     // được điều chỉnh dựa trên các model có sẵn trên nền tảng RunwayML.
-    const model = await runway.model("runway-ml/stable-diffusion-v1-5");
+    const model = await runway.hostedModel("runway-ml/stable-diffusion-v1-5");
     
     console.log("Sending prompt to Runway:", prompt);
     const result = await model.query({ prompt });
