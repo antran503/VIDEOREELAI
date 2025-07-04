@@ -1,6 +1,9 @@
+import * as React from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import StoryEditor from "@/components/script-editor/StoryEditor";
+import SettingsCastEditor from "@/components/script-editor/SettingsCastEditor";
 
 const mockScript = `The alarm blared at 5:00 AM, but Jake was already awake, staring at the cracked ceiling of his tiny apartment. His phone buzzed—another text from his boss: "I'll ask again, you're on thin ice." He exhaled, tossing it aside. The gym bag by the door hadn't moved in weeks.
 
@@ -22,7 +25,21 @@ Jake's fingers tightened around the mug. "Why are you helping me?"
 
 Maria's smile faded. "Because someone did it for me once."`;
 
+type Tab = "story" | "settings";
+
 const ScriptEditor = () => {
+  const [activeTab, setActiveTab] = React.useState<Tab>("story");
+  const [script, setScript] = React.useState(mockScript);
+  const [isRewriting, setIsRewriting] = React.useState(false);
+
+  const handleRewrite = async () => {
+    setIsRewriting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setScript(prev => prev + "\n\n[AI REWRITE] A new path opened up, one Jake never considered. Maria's simple act of kindness was the spark he needed. He picked up the paper.");
+    setIsRewriting(false);
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col h-full text-white">
@@ -33,23 +50,38 @@ const ScriptEditor = () => {
         </header>
 
         <div className="flex items-center gap-4 mb-6 border-b border-gray-700">
-            <Button variant="ghost" className="text-white font-semibold border-b-2 border-purple-500 rounded-none pb-3 hover:bg-transparent">STORY</Button>
-            <Button variant="ghost" className="text-gray-400 hover:text-white">SETTINGS & CAST</Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => setActiveTab("story")}
+              className={`font-semibold rounded-none pb-3 hover:bg-transparent ${activeTab === 'story' ? 'text-white border-b-2 border-purple-500' : 'text-gray-400 hover:text-white'}`}
+            >
+              STORY
+            </Button>
+            <ChevronRight className="h-5 w-5 text-gray-600" />
+            <Button 
+              variant="ghost" 
+              onClick={() => setActiveTab("settings")}
+              className={`font-semibold rounded-none pb-3 hover:bg-transparent ${activeTab === 'settings' ? 'text-white border-b-2 border-purple-500' : 'text-gray-400 hover:text-white'}`}
+            >
+              SETTINGS & CAST
+            </Button>
             <ChevronRight className="h-5 w-5 text-gray-600" />
             <Button variant="ghost" className="text-gray-400 hover:text-white" disabled>SCENE</Button>
         </div>
 
-        <div className="flex-grow bg-[#1C1C22]/60 border border-gray-700 rounded-lg p-6 text-gray-300 leading-relaxed whitespace-pre-wrap font-mono text-sm relative">
-            {mockScript}
-            <div className="absolute bottom-4 right-4 text-xs text-gray-500">
-                {mockScript.length}/120.000
-            </div>
-        </div>
+        {activeTab === 'story' && (
+          <StoryEditor 
+            script={script}
+            onScriptChange={setScript}
+            isRewriting={isRewriting}
+            onRewrite={handleRewrite}
+            onNext={() => setActiveTab('settings')}
+          />
+        )}
 
-        <footer className="flex justify-end items-center gap-4 mt-6">
-            <Button variant="outline" className="border-gray-600 hover:bg-gray-700 text-white">Rewrite</Button>
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">Next <ChevronRight className="ml-1 h-4 w-4" /></Button>
-        </footer>
+        {activeTab === 'settings' && (
+          <SettingsCastEditor onBack={() => setActiveTab('story')} />
+        )}
       </div>
     </DashboardLayout>
   );
