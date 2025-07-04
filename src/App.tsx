@@ -6,7 +6,7 @@ import Characters from "./pages/Characters";
 import ContentSchedule from "./pages/ContentSchedule";
 import Integrations from "./pages/Integrations";
 import ScriptEditor from "./pages/ScriptEditor";
-import ShotEditor from "./pages/ShotEditor";
+import ShotEditor from "./pages/ShotEditorPage";
 import Storyboard from "./pages/Storyboard";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
