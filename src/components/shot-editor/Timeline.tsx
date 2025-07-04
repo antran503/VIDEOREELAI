@@ -1,71 +1,64 @@
 import * as React from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { GripVertical } from "lucide-react";
+import { mockScenesData, mockShotsData } from "@/data/storyboardData";
 
-// Dữ liệu giả định, thêm thuộc tính 'duration' (thời lượng) cho mỗi cảnh quay
-const mockTimelineData = [
-    {
-        scene: 1,
-        shots: [
-            { id: 1, image: "https://i.imgur.com/4YjD2M5.png", duration: 5 },
-            { id: 2, image: "https://i.imgur.com/sCfp0kE.png", duration: 4 },
-            { id: 3, image: "https://i.imgur.com/4YjD2M5.png", duration: 6 },
-            { id: 4, image: "https://i.imgur.com/sCfp0kE.png", duration: 3 },
-            { id: 5, image: "https://i.imgur.com/4YjD2M5.png", duration: 5 },
-        ]
-    },
-    {
-        scene: 2,
-        shots: [
-            { id: 6, image: "https://i.imgur.com/sCfp0kE.png", duration: 7 },
-            { id: 7, image: "https://i.imgur.com/4YjD2M5.png", duration: 4 },
-            { id: 8, image: "https://i.imgur.com/sCfp0kE.png", duration: 5 },
-            { id: 9, image: "https://i.imgur.com/4YjD2M5.png", duration: 6 },
-            { id: 10, image: "https://i.imgur.com/sCfp0kE.png", duration: 3 },
-            { id: 11, image: "https://i.imgur.com/4YjD2M5.png", duration: 4 },
-            { id: 12, image: "https://i.imgur.com/sCfp0kE.png", duration: 5 },
-        ]
-    },
-    {
-        scene: 3,
-        shots: [
-            { id: 13, image: "https://i.imgur.com/4YjD2M5.png", duration: 8 },
-            { id: 14, image: "https://i.imgur.com/sCfp0kE.png", duration: 6 },
-        ]
-    }
-];
+// Chuyển đổi dữ liệu để sử dụng trong timeline
+const timelineData = mockScenesData.map(scene => ({
+    scene: scene.id,
+    shots: mockShotsData
+        .filter(shot => shot.sceneId === scene.id)
+        .map(shot => ({
+            ...shot,
+            duration: 5 // Thêm thời lượng mặc định là 5 giây cho mỗi cảnh quay
+        }))
+}));
 
-// Dữ liệu giả cho các clip âm thanh
+// Dữ liệu giả cho các clip âm thanh, được mở rộng để phù hợp với toàn bộ timeline
 const mockAudioClips = {
     dialogue: [
         { id: 'd1', shotId: 1, start: 0.5, duration: 4, text: "Ravi's dialogue..." },
         { id: 'd2', shotId: 5, start: 1, duration: 3, text: "Commuter chatter..." },
         { id: 'd3', shotId: 7, start: 0, duration: 3.5, text: "Ravi's internal monologue..." },
+        { id: 'd4', shotId: 9, start: 0, duration: 5, text: "Street performer's song..." },
+        { id: 'd5', shotId: 13, start: 1, duration: 4, text: "Priya: 'You look tired.'" },
+        { id: 'd6', shotId: 16, start: 2, duration: 3, text: "Ravi: 'It's nothing.'" },
+        { id: 'd7', shotId: 24, start: 0, duration: 2, text: "Priya: 'You can do it!'" },
     ],
     sfx: [
         { id: 's1', shotId: 1, start: 0, duration: 1, text: "Alarm Clock" },
         { id: 's2', shotId: 2, start: 0, duration: 4, text: "City Bustle" },
-        { id: 's3', shotId: 8, start: 1, duration: 2, text: "Train Doors" },
+        { id: 's3', shotId: 3, start: 0.2, duration: 1, text: "Phone Buzz" },
+        { id: 's4', shotId: 8, start: 1, duration: 2, text: "Train Doors" },
+        { id: 's5', shotId: 13, start: 0, duration: 8, text: "Office Ambience" },
+        { id: 's6', shotId: 18, start: 1, duration: 1.5, text: "Dusty Guitar Case" },
+        { id: 's7', shotId: 21, start: 0, duration: 1, text: "Guitar String Snap" },
     ],
     music: [
-        { id: 'm1', sceneId: 1, start: 0, duration: 23, text: "Tense morning music" },
-        { id: 'm2', sceneId: 2, start: 0, duration: 34, text: "Hopeful folk song" },
+        { id: 'm1', sceneId: 1, start: 0, duration: 25, text: "Tense morning music" },
+        { id: 'm2', sceneId: 2, start: 0, duration: 35, text: "Hopeful folk song" },
+        { id: 'm3', sceneId: 3, start: 0, duration: 10, text: "Droning office score" },
+        { id: 'm4', sceneId: 4, start: 0, duration: 15, text: "Contemplative cue" },
+        { id: 'm5', sceneId: 5, start: 0, duration: 10, text: "Nostalgic theme" },
+        { id: 'm6', sceneId: 6, start: 0, duration: 15, text: "Determined practice montage" },
+        { id: 'm7', sceneId: 7, start: 0, duration: 15, text: "Nervous/Triumphant finale" },
     ]
 }
 
-const PIXELS_PER_SECOND = 24; // 24px cho mỗi giây
+const PIXELS_PER_SECOND = 24;
 
 const TimelineRuler = ({ totalDuration }: { totalDuration: number }) => {
     const markers = [];
-    for (let i = 0; i <= totalDuration; i++) {
+    const totalWidth = totalDuration * PIXELS_PER_SECOND;
+    for (let i = 0; i <= totalDuration; i += 5) {
         markers.push(
-            <div key={i} className="relative h-full flex items-end" style={{ width: PIXELS_PER_SECOND }}>
+            <div key={i} className="relative h-full flex items-end" style={{ width: PIXELS_PER_SECOND * 5 }}>
                 <div className="w-px h-2 bg-gray-500"></div>
-                {i % 5 === 0 && <span className="absolute -bottom-4 left-0 text-xs text-gray-500">{i}s</span>}
+                <span className="absolute -bottom-4 left-0 text-xs text-gray-500">{i}s</span>
             </div>
         );
     }
-    return <div className="flex h-4">{markers}</div>;
+    return <div className="flex h-4" style={{ width: totalWidth }}>{markers}</div>;
 };
 
 const Timeline = () => {
@@ -73,7 +66,7 @@ const Timeline = () => {
 
     const shotStartTimes = new Map<number, number>();
     let currentTime = 0;
-    mockTimelineData.forEach(scene => {
+    timelineData.forEach(scene => {
         scene.shots.forEach(shot => {
             shotStartTimes.set(shot.id, currentTime);
             currentTime += shot.duration;
@@ -83,7 +76,7 @@ const Timeline = () => {
 
     const sceneStartTimes = new Map<number, number>();
     let currentSceneTime = 0;
-    mockTimelineData.forEach(scene => {
+    timelineData.forEach(scene => {
         sceneStartTimes.set(scene.scene, currentSceneTime);
         const sceneDuration = scene.shots.reduce((acc, shot) => acc + shot.duration, 0);
         currentSceneTime += sceneDuration;
@@ -91,7 +84,6 @@ const Timeline = () => {
 
     return (
         <footer className="h-80 bg-[#1C1C22] border-t border-gray-700 flex flex-shrink-0">
-            {/* Nhãn các lớp */}
             <div className="w-40 flex-shrink-0 bg-[#2A2A33]/50 flex flex-col">
                 <div className="h-8 border-b border-gray-700 flex items-center justify-center">
                     <GripVertical className="h-5 w-5 text-gray-500" />
@@ -104,19 +96,15 @@ const Timeline = () => {
                 </div>
             </div>
 
-            {/* Nội dung Timeline */}
             <ScrollArea className="flex-1 w-full whitespace-nowrap">
                 <div className="relative p-2" style={{ width: totalDuration * PIXELS_PER_SECOND + 200 }}>
-                    {/* Thước đo thời gian */}
                     <div className="h-8 sticky top-0 bg-[#1C1C22] z-10">
                         <TimelineRuler totalDuration={totalDuration} />
                     </div>
 
-                    {/* Các rãnh (tracks) */}
                     <div className="space-y-1 mt-4">
-                        {/* Rãnh Video */}
                         <div className="h-20 relative">
-                            {mockTimelineData.flatMap(sceneData => 
+                            {timelineData.flatMap(sceneData => 
                                 sceneData.shots.map((shot, index) => (
                                     <div
                                         key={shot.id}
@@ -127,16 +115,15 @@ const Timeline = () => {
                                         }}
                                         onClick={() => setActiveShot(shot.id)}
                                     >
-                                        <img src={shot.image} alt={`Shot ${index + 1}`} className="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
+                                        <img src={shot.image} alt={`Shot ${shot.id}`} className="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
                                         <div className="absolute text-xs text-white p-1 bg-black/50 rounded">
-                                            Shot {index + 1}
+                                            Shot {shot.id}
                                         </div>
                                     </div>
                                 ))
                             )}
                         </div>
 
-                        {/* Rãnh Dialogue */}
                         <div className="h-16 relative py-2">
                             {mockAudioClips.dialogue.map(clip => {
                                 const shotStartTime = shotStartTimes.get(clip.shotId) || 0;
@@ -150,7 +137,6 @@ const Timeline = () => {
                             })}
                         </div>
 
-                        {/* Rãnh SFX */}
                         <div className="h-16 relative py-2">
                             {mockAudioClips.sfx.map(clip => {
                                 const shotStartTime = shotStartTimes.get(clip.shotId) || 0;
@@ -164,7 +150,6 @@ const Timeline = () => {
                             })}
                         </div>
 
-                        {/* Rãnh Music */}
                         <div className="h-16 relative py-2">
                             {mockAudioClips.music.map(clip => {
                                 const sceneStartTime = sceneStartTimes.get(clip.sceneId) || 0;
