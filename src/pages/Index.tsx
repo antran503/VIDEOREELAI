@@ -1,17 +1,22 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import ProjectCard from "@/components/projects/ProjectCard";
-import { projects } from "@/data/projects";
+import { projects as initialProjects } from "@/data/projects";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Lightbulb, FileText, PlayCircle } from "lucide-react";
 import IdeaModal from "@/components/IdeaModal";
 import NewProjectModal from "@/components/dashboard/NewProjectModal";
+import { generateImageFromPrompt } from "@/services/runwareService";
+import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
 const Dashboard = () => {
   const [isIdeaModalOpen, setIsIdeaModalOpen] = React.useState(false);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = React.useState(false);
   const navigate = useNavigate();
+
+  const [projects, setProjects] = React.useState(initialProjects);
+  const [generatingThumbnailId, setGeneratingThumbnailId] = React.useState<string | null>(null);
 
   const handleIdeaSuccess = () => {
     navigate('/script-editor');
@@ -19,6 +24,25 @@ const Dashboard = () => {
 
   const handleNewProjectSuccess = () => {
     navigate('/script-editor');
+  };
+
+  const handleGenerateThumbnail = async (projectId: string, prompt: string) => {
+    setGeneratingThumbnailId(projectId);
+    const toastId = showLoading("Đang tạo thumbnail với Runware...");
+    try {
+      const newImageUrl = await generateImageFromPrompt(prompt);
+      setProjects(prev => 
+        prev.map(p => p.id === projectId ? { ...p, image: newImageUrl } : p)
+      );
+      dismissToast(toastId);
+      showSuccess("Tạo thumbnail thành công!");
+    } catch (error) {
+      dismissToast(toastId);
+      showError("Tạo thumbnail thất bại.");
+      console.error(error);
+    } finally {
+      setGeneratingThumbnailId(null);
+    }
   };
 
   return (
@@ -83,7 +107,14 @@ const Dashboard = () => {
         <div>
           <h2 className="text-2xl font-semibold text-white mb-4">Recent Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {projects.map(project => <ProjectCard key={project.id} project={project} />)}
+            {projects.map(project => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                onGenerateThumbnail={handleGenerateThumbnail}
+                isGeneratingThumbnail={generatingThumbnailId === project.id}
+              />
+            ))}
           </div>
         </div>
       </div>
