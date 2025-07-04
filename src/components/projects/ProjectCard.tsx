@@ -98,7 +98,7 @@ const ProjectCard = ({ project, onDelete, onCopy }: ProjectCardProps) => {
         <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white h-8" onClick={() => navigate('/script-editor')}>
+              <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white h-8" onClick={() => navigate('/storyboard')}>
                   <Pencil className="mr-2 h-3 w-3" />
                   Edit
               </Button>

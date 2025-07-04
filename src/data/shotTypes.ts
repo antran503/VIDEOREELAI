@@ -1,0 +1,16 @@
+export const shotTypes = [
+  { value: "close-up", label: "Close-Up" },
+  { value: "medium-shot", label: "Medium Shot" },
+  { value: "long-shot", label: "Long Shot" },
+  { value: "extreme-close-up", label: "Extreme Close-Up" },
+  { value: "over-the-shoulder", label: "Over-the-Shoulder Shot" },
+  { value: "two-shot", label: "Two-Shot" },
+  { value: "wide-shot", label: "Wide Shot" },
+  { value: "establishing-shot", label: "Establishing Shot" },
+  { value: "cut-in", label: "Cut-In" },
+  { value: "cutaway", label: "Cutaway" },
+  { value: "tracking-shot", label: "Tracking Shot" },
+  { value: "dolly-shot", label: "Dolly Shot" },
+  { value: "zoom-shot", label: "Zoom Shot" },
+  { value: "pov", label: "Point of View (POV)" },
+];

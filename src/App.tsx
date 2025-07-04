@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ScriptEditor from "./pages/ScriptEditor";
 import Projects from "./pages/Projects";
+import Storyboard from "./pages/Storyboard";
+import ShotEditorPage from "./pages/ShotEditorPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/schedule" element={<Index />} />
           <Route path="/integration" element={<Index />} />
           <Route path="/script-editor" element={<ScriptEditor />} />
+          <Route path="/storyboard" element={<Storyboard />} />
+          <Route path="/shot-editor" element={<ShotEditorPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
