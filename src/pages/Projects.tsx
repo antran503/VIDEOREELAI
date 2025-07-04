@@ -3,7 +3,7 @@ import ProjectCard from "@/components/projects/ProjectCard";
 import { projects as initialProjects } from "@/data/projects";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { generateImageFromPrompt } from "@/services/runwareService";
+import { generateImageFromPrompt } from "@/services/imageGenerationService";
 import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
 const Projects = () => {
@@ -12,7 +12,7 @@ const Projects = () => {
 
   const handleGenerateThumbnail = async (projectId: string, prompt: string) => {
     setGeneratingThumbnailId(projectId);
-    const toastId = showLoading("Đang tạo thumbnail với Runware...");
+    const toastId = showLoading("Đang tạo thumbnail...");
     try {
       const newImageUrl = await generateImageFromPrompt(prompt);
       setProjects(prev => 
@@ -22,7 +22,7 @@ const Projects = () => {
       showSuccess("Tạo thumbnail thành công!");
     } catch (error) {
       dismissToast(toastId);
-      showError("Tạo thumbnail thất bại.");
+      showError(`Tạo thumbnail thất bại: ${error.message}`);
       console.error(error);
     } finally {
       setGeneratingThumbnailId(null);

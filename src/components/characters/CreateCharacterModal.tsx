@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Loader2, Sparkles } from "lucide-react";
-import { generateImageFromPrompt } from "@/services/runwareService";
+import { generateImageFromPrompt } from "@/services/imageGenerationService";
 import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
 interface CreateCharacterModalProps {
@@ -31,7 +31,7 @@ const CreateCharacterModal = ({ open, onOpenChange, onCharacterCreated }: Create
       return;
     }
     setIsGenerating(true);
-    const toastId = showLoading("Đang tạo nhân vật với Runware...");
+    const toastId = showLoading("Đang tạo nhân vật...");
     try {
       const imageUrl = await generateImageFromPrompt(prompt);
       onCharacterCreated(name, imageUrl, prompt);
@@ -42,7 +42,7 @@ const CreateCharacterModal = ({ open, onOpenChange, onCharacterCreated }: Create
       setPrompt("");
     } catch (error) {
       dismissToast(toastId);
-      showError("Tạo nhân vật thất bại.");
+      showError(`Tạo nhân vật thất bại: ${error.message}`);
       console.error(error);
     } finally {
       setIsGenerating(false);

@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Lightbulb, FileText, PlayCircle } from "lucide-react";
 import IdeaModal from "@/components/IdeaModal";
 import NewProjectModal from "@/components/dashboard/NewProjectModal";
-import { generateImageFromPrompt } from "@/services/runwareService";
+import { generateImageFromPrompt } from "@/services/imageGenerationService";
 import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
 const Dashboard = () => {
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
   const handleGenerateThumbnail = async (projectId: string, prompt: string) => {
     setGeneratingThumbnailId(projectId);
-    const toastId = showLoading("Đang tạo thumbnail với Runware...");
+    const toastId = showLoading("Đang tạo thumbnail...");
     try {
       const newImageUrl = await generateImageFromPrompt(prompt);
       setProjects(prev => 
@@ -38,7 +38,7 @@ const Dashboard = () => {
       showSuccess("Tạo thumbnail thành công!");
     } catch (error) {
       dismissToast(toastId);
-      showError("Tạo thumbnail thất bại.");
+      showError(`Tạo thumbnail thất bại: ${error.message}`);
       console.error(error);
     } finally {
       setGeneratingThumbnailId(null);
