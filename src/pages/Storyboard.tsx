@@ -53,6 +53,14 @@ const Storyboard = () => {
     showSuccess(`New shot added to Scene ${activeSceneId}`);
   };
 
+  const handleUpdateShotImage = (shotId: number, newImage: string) => {
+    setShots(prevShots => 
+      prevShots.map(shot => 
+        shot.id === shotId ? { ...shot, image: newImage } : shot
+      )
+    );
+  };
+
   return (
     <>
       <AddNewSceneModal 
@@ -129,7 +137,12 @@ const Storyboard = () => {
               <div className="flex-grow overflow-x-auto p-4">
                   <div className="flex items-stretch gap-4 h-full w-max">
                       {activeShots.map((shot, index) => (
-                          <ShotCard key={shot.id} shot={shot} index={index} />
+                          <ShotCard 
+                            key={shot.id} 
+                            shot={shot} 
+                            index={index} 
+                            onUpdateShotImage={handleUpdateShotImage}
+                          />
                       ))}
                       <Button onClick={() => setAddShotModalOpen(true)} variant="outline" className="w-24 flex-shrink-0 border-gray-600 hover:bg-gray-700 text-white flex-col gap-2">
                           <Plus className="h-6 w-6" />

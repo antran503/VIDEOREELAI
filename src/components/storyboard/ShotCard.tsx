@@ -8,24 +8,43 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { shotTypes } from "@/data/shotTypes";
 import { cameraAngles } from "@/data/cameraAngles";
 import { lightingOptions } from "@/data/lightingOptions";
-import { Sparkles, Pencil, X, GripVertical, RefreshCw, Play, ChevronDown } from "lucide-react";
+import { Sparkles, Pencil, X, GripVertical, RefreshCw, Play, ChevronDown, Loader2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { characters as mockCharacters } from "@/data/characters";
+import { generateImageFromPrompt } from "@/services/runwayService";
+import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
-const ShotCard = ({ shot, index }: { shot: any, index: number }) => {
+const ShotCard = ({ shot, index, onUpdateShotImage }: { shot: any, index: number, onUpdateShotImage: (shotId: number, newImage: string) => void }) => {
   const navigate = useNavigate();
   const [isDialogueEnabled, setIsDialogueEnabled] = React.useState(false);
   const [selectedCharacter, setSelectedCharacter] = React.useState(mockCharacters[2]);
   const [dialogueText, setDialogueText] = React.useState("Zindagi ki rail hai, bas ek hi safar...\n(Life is a train, just one journey)");
   const [popoverOpen, setPopoverOpen] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
 
   React.useEffect(() => {
-    // Tự động bật dialogue cho cảnh quay của người hát rong để demo
     if (shot.prompt.includes("street performer begins singing")) {
       setIsDialogueEnabled(true);
     }
   }, [shot.prompt]);
+
+  const handleGenerateImage = async () => {
+    setIsGenerating(true);
+    const toastId = showLoading("Đang tạo ảnh với Runway...");
+    try {
+      const newImageUrl = await generateImageFromPrompt(shot.prompt);
+      onUpdateShotImage(shot.id, newImageUrl);
+      dismissToast(toastId);
+      showSuccess("Tạo ảnh thành công!");
+    } catch (error) {
+      dismissToast(toastId);
+      showError("Tạo ảnh thất bại.");
+      console.error(error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="w-[280px] flex-shrink-0 bg-[#1C1C22] border border-gray-700 rounded-lg p-3 space-y-3 relative group">
@@ -36,6 +55,11 @@ const ShotCard = ({ shot, index }: { shot: any, index: number }) => {
       </div>
       <div className="aspect-video bg-gray-800 rounded-md overflow-hidden relative">
         <img src={shot.image} alt={`Shot ${index + 1}`} className="w-full h-full object-cover" />
+        {isGenerating && (
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
+          </div>
+        )}
         <div className="absolute top-2 left-2 bg-black/60 text-white text-xs font-bold px-2 py-1 rounded-md flex items-center gap-1">
             <GripVertical className="h-3 w-3" />
             <span>{index + 1}</span>
@@ -151,12 +175,13 @@ const ShotCard = ({ shot, index }: { shot: any, index: number }) => {
         />
       </div>
       <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-700">
-        <Button variant="ghost" className="text-xs text-white hover:bg-gray-700 hover:text-white">
-          <Sparkles className="mr-2 h-3 w-3 text-pink-400" /> Generate Video
+        <Button variant="ghost" className="text-xs text-white hover:bg-gray-700 hover:text-white flex-1" onClick={handleGenerateImage} disabled={isGenerating}>
+          <Sparkles className="mr-2 h-3 w-3 text-pink-400" /> 
+          {isGenerating ? 'Đang tạo...' : 'Tạo ảnh'}
         </Button>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" className="text-xs text-white hover:bg-gray-700 hover:text-white" onClick={() => navigate('/shot-editor')}>
+            <Button variant="ghost" className="text-xs text-white hover:bg-gray-700 hover:text-white flex-1" onClick={() => navigate('/shot-editor')}>
               <Pencil className="mr-2 h-3 w-3" /> Shot editor
             </Button>
           </TooltipTrigger>
