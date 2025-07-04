@@ -1,9 +1,13 @@
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Play, Lightbulb, FileText, Sparkles } from "lucide-react";
+import IdeaModal from "@/components/IdeaModal";
 
 const Index = () => {
+  const [isIdeaModalOpen, setIsIdeaModalOpen] = React.useState(false);
+
   return (
     <DashboardLayout>
       <div className="relative bg-gradient-to-br from-purple-900/50 to-indigo-900/50 rounded-lg p-8 md:p-12 text-white overflow-hidden">
@@ -31,7 +35,7 @@ const Index = () => {
                     <div className="flex-1">
                         <h4 className="font-semibold text-lg">Start with an idea</h4>
                         <p className="text-sm text-gray-400 mb-4">Instantly turn any idea or simple prompt to a fully realized project.</p>
-                        <Button className="bg-gradient-to-r from-pink-500 to-purple-400 text-white rounded-md">
+                        <Button onClick={() => setIsIdeaModalOpen(true)} className="bg-gradient-to-r from-pink-500 to-purple-400 text-white rounded-md">
                             Write prompt <Sparkles className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
@@ -63,6 +67,8 @@ const Index = () => {
           <p>No projects created yet.</p>
         </div>
       </div>
+      
+      <IdeaModal open={isIdeaModalOpen} onOpenChange={setIsIdeaModalOpen} />
     </DashboardLayout>
   );
 };
