@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ScriptEditor from "./pages/ScriptEditor";
+import Projects from "./pages/Projects";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           {/* Placeholder routes for sidebar navigation */}
-          <Route path="/projects" element={<Index />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/characters" element={<Index />} />
           <Route path="/schedule" element={<Index />} />
           <Route path="/integration" element={<Index />} />

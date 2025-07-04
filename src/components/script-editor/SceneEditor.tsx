@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { Loader2, Trash2, Copy, ChevronLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,7 @@ interface SceneEditorProps {
 }
 
 const SceneEditor = ({ onBack }: SceneEditorProps) => {
+  const navigate = useNavigate();
   const [isGenerating, setIsGenerating] = React.useState(true);
   const [scenes, setScenes] = React.useState<Scene[]>([]);
 
@@ -95,6 +97,10 @@ const SceneEditor = ({ onBack }: SceneEditorProps) => {
       
       return newScenes;
     });
+  };
+
+  const handleStartCreatingShots = () => {
+    navigate('/projects', { state: { startGeneration: true } });
   };
 
   if (isGenerating) {
@@ -140,7 +146,10 @@ const SceneEditor = ({ onBack }: SceneEditorProps) => {
         <Button variant="outline" className="border-gray-600 hover:bg-gray-700 text-white" onClick={onBack}>
           <ChevronLeft className="mr-1 h-4 w-4" /> Back
         </Button>
-        <Button className="bg-gradient-to-r from-pink-500 to-blue-500 text-white">
+        <Button 
+          className="bg-gradient-to-r from-pink-500 to-blue-500 text-white"
+          onClick={handleStartCreatingShots}
+        >
           Start Creating Shots
         </Button>
       </footer>
