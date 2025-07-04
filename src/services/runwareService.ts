@@ -1,8 +1,7 @@
 import { RunwayML } from "@runwayml/sdk";
 
-// Sửa lỗi 1: Tên thuộc tính đúng có thể là 'runway_token'.
 const runway = new RunwayML({
-  runway_token: "93mL0Hd1fUVky4jcbyFAjBgJz1OtxQem",
+  apiKey: "93mL0Hd1fUVky4jcbyFAjBgJz1OtxQem",
 });
 
 /**
@@ -14,11 +13,11 @@ const runway = new RunwayML({
 export const generateImageFromPrompt = async (prompt: string): Promise<string> => {
   console.log("Đang thử tạo ảnh với API key mới và RunwayML SDK...");
   try {
-    // Sửa lỗi 2: Phương thức đúng có thể là 'query' được gọi trực tiếp trên instance,
-    // thay vì 'hostedModel'.
-    const result = await runway.query("runway-ml/stable-diffusion-v1-5", {
-      prompt,
-    });
+    // Lấy mô hình được lưu trữ trước
+    const model = await runway.hostedModel("runway-ml/stable-diffusion-v1-5");
+    
+    // Sửa lỗi: Gọi 'query' trên đối tượng 'model' đã lấy được
+    const result = await model.query({ prompt });
 
     if (result?.image) {
       console.log("Tạo ảnh thành công:", result.image);
@@ -29,6 +28,7 @@ export const generateImageFromPrompt = async (prompt: string): Promise<string> =
     }
   } catch (error) {
     console.error("Lỗi RunwayML SDK:", error);
+    // Lỗi CORS hoặc lỗi mạng khác có thể sẽ bị bắt ở đây.
     throw error;
   }
 };
