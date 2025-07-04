@@ -1,28 +1,34 @@
-// Một bộ đếm đơn giản để xoay vòng qua các ảnh mẫu
-let imageIndex = 0;
-const placeholderImages = [
-  "https://i.imgur.com/4YjD2M5.png", // Một nhân vật
-  "https://i.imgur.com/sCfp0kE.png", // Một nhân vật/cảnh khác
-  "https://i.imgur.com/aF4aYxT.jpg", // Một cảnh quan/cảnh phim
-  "https://i.imgur.com/sCfp0kE.png", // Một cảnh khác
-];
+import { RunwayML } from "@runwayml/sdk";
+
+// Sửa lỗi 1: Tên thuộc tính đúng có thể là 'runway_token'.
+const runway = new RunwayML({
+  runway_token: "93mL0Hd1fUVky4jcbyFAjBgJz1OtxQem",
+});
 
 /**
- * Mô phỏng việc tạo ảnh từ dịch vụ Runware để giải quyết các vấn đề kết nối API (ví dụ: lỗi CORS).
- * Hàm này trả về một ảnh mẫu chất lượng cao sau một khoảng thời gian chờ ngắn.
- * @param prompt Đoạn văn bản mô tả ảnh cần tạo (được ghi lại để gỡ lỗi).
- * @returns URL của một ảnh mẫu.
+ * Cố gắng tạo ảnh bằng RunwayML SDK với API key được cung cấp.
+ * LƯU Ý: Yêu cầu này dự kiến sẽ thất bại trong môi trường trình duyệt do các hạn chế về CORS.
+ * @param prompt Đoạn văn bản mô tả ảnh cần tạo.
+ * @returns URL của ảnh được tạo.
  */
 export const generateImageFromPrompt = async (prompt: string): Promise<string> => {
-  console.log(`Simulating image generation with Runware. Prompt: "${prompt}"`);
+  console.log("Đang thử tạo ảnh với API key mới và RunwayML SDK...");
+  try {
+    // Sửa lỗi 2: Phương thức đúng có thể là 'query' được gọi trực tiếp trên instance,
+    // thay vì 'hostedModel'.
+    const result = await runway.query("runway-ml/stable-diffusion-v1-5", {
+      prompt,
+    });
 
-  // Mô phỏng độ trễ mạng để người dùng cảm thấy quá trình đang diễn ra
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  // Lấy ảnh tiếp theo trong danh sách và quay vòng
-  const imageUrl = placeholderImages[imageIndex];
-  imageIndex = (imageIndex + 1) % placeholderImages.length;
-
-  console.log("Runware simulated generation successful. Returning placeholder image:", imageUrl);
-  return imageUrl;
+    if (result?.image) {
+      console.log("Tạo ảnh thành công:", result.image);
+      return result.image;
+    } else {
+      console.error("Yêu cầu không trả về ảnh.", result);
+      throw new Error("Yêu cầu không trả về ảnh.");
+    }
+  } catch (error) {
+    console.error("Lỗi RunwayML SDK:", error);
+    throw error;
+  }
 };
