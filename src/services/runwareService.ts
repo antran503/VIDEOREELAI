@@ -1,70 +1,86 @@
 // LƯU Ý BẢO MẬT: API key của bạn không nên được lưu trữ trực tiếp trong mã nguồn.
 // Trong một ứng dụng thực tế, hãy sử dụng biến môi trường hoặc một dịch vụ quản lý bí mật.
-// Key này được lấy từ cài đặt của bạn, hãy đảm bảo nó chính xác.
-const RUNWARE_API_KEY = "BoC1SEOiYbqsoj0ZKlY4q3HX0bAJaEN7"; 
+const RUNWARE_API_KEY = "BoC1SEOiYbqsoj0ZKlY4q3HX0bAJaEN7";
+const MODEL_ID = "runway-ml/stable-diffusion-v1-5"; // Model mặc định dựa trên tài liệu
 
-// Đây là một endpoint API giả định. Nó có thể cần được điều chỉnh.
-const RUNWARE_API_URL = "https://api.runware.ai/v1/images/generate";
+const INFERENCE_API_URL = `https://api.runware.ai/v1/inference/${MODEL_ID}`;
+const JOB_STATUS_API_URL = "https://api.runware.ai/v1/inference/jobs/";
+
+// Hàm tiện ích để tạo độ trễ giữa các lần kiểm tra
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Tạo ảnh từ một đoạn văn bản prompt bằng Runware API.
+ * Tạo ảnh từ một đoạn văn bản prompt bằng Runware API theo quy trình bất đồng bộ.
  * @param prompt Đoạn văn bản mô tả ảnh cần tạo.
  * @returns URL của ảnh đã được tạo.
  */
 export const generateImageFromPrompt = async (prompt: string): Promise<string> => {
-  console.log("Attempting to generate image with Runware for prompt:", prompt);
+  console.log(`Starting image generation job for prompt: "${prompt}"`);
 
-  try {
-    const response = await fetch(RUNWARE_API_URL, {
-      method: "POST",
+  // --- Bước 1: Gửi yêu cầu để bắt đầu công việc tạo ảnh ---
+  const startJobResponse = await fetch(INFERENCE_API_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RUNWARE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      parameters: {
+        prompt: prompt,
+      },
+    }),
+  });
+
+  if (!startJobResponse.ok) {
+    const errorBody = await startJobResponse.text();
+    console.error("Runware API Error (starting job):", errorBody);
+    throw new Error(`Failed to start image generation job: ${startJobResponse.statusText}`);
+  }
+
+  const job = await startJobResponse.json();
+  const jobId = job.uuid;
+
+  if (!jobId) {
+    console.error("Runware response did not contain a job UUID", job);
+    throw new Error("Invalid response from Runware when starting job.");
+  }
+
+  console.log(`Job started successfully. Job ID: ${jobId}`);
+
+  // --- Bước 2: Lặp lại việc kiểm tra trạng thái công việc cho đến khi hoàn thành ---
+  const maxAttempts = 20; // Tối đa 20 lần thử (khoảng 60 giây)
+  for (let i = 0; i < maxAttempts; i++) {
+    console.log(`Polling for job status... Attempt ${i + 1}`);
+    
+    await sleep(3000); // Chờ 3 giây
+
+    const getStatusResponse = await fetch(`${JOB_STATUS_API_URL}${jobId}`, {
       headers: {
         "Authorization": `Bearer ${RUNWARE_API_KEY}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt: prompt,
-        n: 1, // Số lượng ảnh cần tạo
-        size: "512x512", // Kích thước ảnh
-      }),
     });
 
-    if (!response.ok) {
-      // Cố gắng đọc lỗi dưới dạng văn bản hoặc JSON để có thêm thông tin
-      let errorBody;
-      try {
-        errorBody = await response.json();
-      } catch (e) {
-        errorBody = await response.text();
+    if (!getStatusResponse.ok) {
+      console.warn(`Could not get job status: ${getStatusResponse.statusText}`);
+      continue; // Thử lại sau giây lát
+    }
+
+    const jobStatus = await getStatusResponse.json();
+
+    if (jobStatus.status === "SUCCEEDED") {
+      console.log("Job succeeded!", jobStatus);
+      const imageUrl = jobStatus.outputs?.[0]?.url;
+      if (imageUrl) {
+        return imageUrl;
+      } else {
+        throw new Error("Job succeeded but no image URL was found in the output.");
       }
-      console.error("Runware API Error Response:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorBody,
-      });
-      throw new Error(`Lỗi từ Runware API: ${response.statusText}`);
+    } else if (jobStatus.status === "FAILED") {
+      console.error("Job failed:", jobStatus);
+      throw new Error(`Image generation failed. Reason: ${jobStatus.failure_reason}`);
     }
-
-    const result = await response.json();
-    console.log("Runware API Success Response:", result);
-
-    // Kiểm tra các cấu trúc phản hồi phổ biến để tìm URL ảnh
-    const imageUrl = result?.data?.[0]?.url || result?.images?.[0] || result?.url;
-
-    if (imageUrl && typeof imageUrl === 'string') {
-      console.log("Image URL found:", imageUrl);
-      return imageUrl;
-    } else {
-      console.error("Could not find image URL in Runware response", result);
-      throw new Error("Phản hồi từ Runware không chứa URL ảnh hợp lệ.");
-    }
-
-  } catch (error) {
-    console.error("Failed to call Runware API:", error);
-    // Nếu lỗi là do CORS, nó thường sẽ là một TypeError.
-    if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error("Không thể kết nối đến Runware. Điều này có thể do lỗi mạng hoặc chính sách CORS của trình duyệt. Hãy kiểm tra kết nối mạng và bảng điều khiển của trình duyệt để biết thêm chi tiết.");
-    }
-    // Ném lại lỗi ban đầu hoặc một lỗi mới
-    throw error;
+    // Nếu trạng thái là PENDING hoặc RUNNING, vòng lặp sẽ tiếp tục
   }
+
+  throw new Error("Image generation timed out after 60 seconds.");
 };
