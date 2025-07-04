@@ -85,27 +85,29 @@ const ScriptEditor = () => {
             </Button>
         </div>
 
-        {activeTab === 'story' && (
-          <StoryEditor 
-            script={script}
-            onScriptChange={setScript}
-            isRewriting={isRewriting}
-            onRewrite={handleRewrite}
-            onNext={() => setActiveTab('settings')}
-          />
-        )}
+        <div className="flex-grow flex flex-col">
+          {activeTab === 'story' && (
+            <StoryEditor 
+              script={script}
+              onScriptChange={setScript}
+              isRewriting={isRewriting}
+              onRewrite={handleRewrite}
+              onNext={() => setActiveTab('settings')}
+            />
+          )}
 
-        {activeTab === 'settings' && (
-          <SettingsCastEditor 
-            onBack={() => setActiveTab('story')} 
-            onNext={handleGenerateScenes}
-            isGenerating={isGeneratingScenes}
-          />
-        )}
+          {activeTab === 'settings' && (
+            <SettingsCastEditor 
+              onBack={() => setActiveTab('story')} 
+              onNext={handleGenerateScenes}
+              isGenerating={isGeneratingScenes}
+            />
+          )}
 
-        {activeTab === 'scene' && (
-          <SceneEditor />
-        )}
+          {activeTab === 'scene' && (
+            <SceneEditor onBack={() => setActiveTab('settings')} />
+          )}
+        </div>
       </div>
     </DashboardLayout>
   );
