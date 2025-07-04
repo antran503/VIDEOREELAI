@@ -66,7 +66,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         </div>
 
         <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button size="sm" className="bg-black/70 text-white hover:bg-black/90 text-xs" onClick={() => navigate('/script-editor')}>
+            <Button size="sm" className="bg-black/70 text-white hover:bg-black/90 text-xs" onClick={() => navigate('/storyboard')}>
                 <Pencil className="mr-1.5 h-3 w-3" />
                 Edit
             </Button>
