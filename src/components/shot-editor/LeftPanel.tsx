@@ -1,7 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -11,7 +10,7 @@ import { Download, Play, UploadCloud } from "lucide-react";
 
 const LeftPanel = () => {
   return (
-    <div className="w-80 bg-[#1C1C22] p-4 space-y-4 overflow-y-auto">
+    <div className="w-80 bg-[#1C1C22] p-4 space-y-4 overflow-y-auto h-full">
       <Accordion type="multiple" defaultValue={['background-score']} className="w-full">
         <AccordionItem value="background-score">
           <AccordionTrigger>Background Score</AccordionTrigger>

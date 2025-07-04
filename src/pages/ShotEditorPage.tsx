@@ -1,5 +1,6 @@
 import LeftPanel from "@/components/shot-editor/LeftPanel";
 import RightPanel from "@/components/shot-editor/RightPanel";
+import Timeline from "@/components/shot-editor/Timeline";
 import { Button } from "@/components/ui/button";
 import { User, Play, PlayCircle, SkipBack, SkipForward } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,7 @@ const ShotEditorPage = () => {
   return (
     <div className="flex flex-col h-screen bg-zinc-950 text-white">
       {/* Header */}
-      <header className="flex items-center justify-between p-2 border-b border-gray-700">
+      <header className="flex items-center justify-between p-2 border-b border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 font-semibold text-white px-4">
             <PlayCircle className="h-6 w-6 text-purple-400" />
@@ -76,9 +77,7 @@ const ShotEditorPage = () => {
       </div>
 
       {/* Timeline */}
-      <footer className="h-40 bg-[#1C1C22] border-t border-gray-700 p-4">
-        <div className="text-center text-gray-500">Timeline Placeholder</div>
-      </footer>
+      <Timeline />
     </div>
   );
 };
