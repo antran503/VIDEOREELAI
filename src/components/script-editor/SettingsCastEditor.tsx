@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, Loader2, PlusCircle, Replace, Voicemail } from "lucide-react";
+import { ChevronLeft, Loader2, PlusCircle, Replace, Voicemail, ChevronRight } from "lucide-react";
 import VideoStylePicker from "./VideoStylePicker";
 import {
   Select,
@@ -34,7 +34,13 @@ const mockCast = [
 
 type Character = { id: number; name: string; image: string };
 
-const SettingsCastEditor = ({ onBack }: { onBack: () => void }) => {
+interface SettingsCastEditorProps {
+  onBack: () => void;
+  onNext: () => void;
+  isGenerating: boolean;
+}
+
+const SettingsCastEditor = ({ onBack, onNext, isGenerating }: SettingsCastEditorProps) => {
   const [movieType, setMovieType] = React.useState("dialogue");
   const [isGeneratingCast, setIsGeneratingCast] = React.useState(true);
   const [cast, setCast] = React.useState<Character[]>([]);
@@ -197,10 +203,22 @@ const SettingsCastEditor = ({ onBack }: { onBack: () => void }) => {
         </div>
 
         <footer className="flex justify-end items-center gap-4 mt-6">
-          <Button variant="outline" className="border-gray-600 hover:bg-gray-700 text-white" onClick={onBack}>
+          <Button variant="outline" className="border-gray-600 hover:bg-gray-700 text-white" onClick={onBack} disabled={isGenerating}>
             <ChevronLeft className="mr-1 h-4 w-4" /> Back
           </Button>
-          <Button className="bg-gray-400 text-gray-800 cursor-not-allowed">Next</Button>
+          <Button 
+            className="bg-gradient-to-r from-pink-500 to-blue-500 text-white w-[90px]"
+            onClick={onNext}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <>
+                Next <ChevronRight className="ml-1 h-4 w-4" />
+              </>
+            )}
+          </Button>
         </footer>
       </div>
     </>
