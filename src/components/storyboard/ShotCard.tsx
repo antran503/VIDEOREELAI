@@ -33,7 +33,7 @@ const ShotCard = ({ shot, index, onUpdateShotImage }: { shot: any, index: number
     setIsGenerating(true);
     const toastId = showLoading("Đang tạo ảnh với Runware...");
     try {
-      const newImageUrl = await generateImageFromPrompt(shot.prompt);
+      const newImageUrl = await generateImageFromPrompt(shot.prompt, shot.image);
       onUpdateShotImage(shot.id, newImageUrl);
       dismissToast(toastId);
       showSuccess("Tạo ảnh thành công!");

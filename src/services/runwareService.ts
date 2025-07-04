@@ -6,9 +6,10 @@
  *
  * Thay vào đó, chúng ta trả về một URL ảnh giữ chỗ để cho phép giao diện người dùng hoạt động.
  * @param prompt - Đoạn văn bản mô tả ảnh cần tạo.
- * @returns Một promise phân giải thành một URL ảnh giữ chỗ.
+ * @param currentImage - URL của ảnh hiện tại để đảm bảo ảnh mới khác biệt.
+ * @returns Một promise phân giải thành một URL ảnh giữ chỗ mới.
  */
-export const generateImageFromPrompt = async (prompt: string): Promise<string> => {
+export const generateImageFromPrompt = async (prompt: string, currentImage?: string): Promise<string> => {
   console.log(`Mô phỏng tạo ảnh cho prompt: "${prompt}"`);
 
   // Giả lập độ trễ mạng
@@ -19,11 +20,20 @@ export const generateImageFromPrompt = async (prompt: string): Promise<string> =
     "https://i.imgur.com/sCfp0kE.png",
     "https://i.imgur.com/4YjD2M5.png",
     "https://i.imgur.com/aF4aYxT.jpg",
-    "https://i.imgur.com/sCfp0kE.png",
+    "https://i.imgur.com/9yV4aG2.png", // Thêm một ảnh mới để tăng sự đa dạng
   ];
   
-  const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
+  let newImage = currentImage;
+  // Tiếp tục chọn ảnh mới cho đến khi nó khác với ảnh hiện tại
+  // Điều này chỉ chạy nếu có nhiều hơn 1 ảnh trong danh sách
+  if (placeholderImages.length > 1 && currentImage) {
+    while (newImage === currentImage) {
+      newImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
+    }
+  } else {
+    newImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
+  }
 
-  console.log(`Trả về ảnh giữ chỗ: ${randomImage}`);
-  return randomImage;
+  console.log(`Trả về ảnh giữ chỗ: ${newImage}`);
+  return newImage;
 };
