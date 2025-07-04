@@ -12,9 +12,10 @@ interface SceneListProps {
   scenes: Scene[];
   activeSceneId: number;
   onSelectScene: (id: number) => void;
+  onAddScene: () => void;
 }
 
-const SceneList = ({ scenes, activeSceneId, onSelectScene }: SceneListProps) => {
+const SceneList = ({ scenes, activeSceneId, onSelectScene, onAddScene }: SceneListProps) => {
   return (
     <div className="w-56 flex-shrink-0 flex flex-col gap-4 bg-[#1C1C22] p-4 rounded-lg">
       <ScrollArea className="flex-grow -mr-4 pr-4">
@@ -34,7 +35,7 @@ const SceneList = ({ scenes, activeSceneId, onSelectScene }: SceneListProps) => 
           ))}
         </div>
       </ScrollArea>
-      <Button variant="outline" className="w-full border-gray-600 hover:bg-gray-700 text-white flex items-center justify-center h-20">
+      <Button variant="outline" onClick={onAddScene} className="w-full border-gray-600 hover:bg-gray-700 text-white flex items-center justify-center h-20">
         <Plus className="h-6 w-6" />
       </Button>
     </div>
