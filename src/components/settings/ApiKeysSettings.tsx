@@ -15,6 +15,7 @@ interface ApiKey {
 const initialApiKeys: ApiKey[] = [
   { id: '1', name: 'My OpenAI Key', key: 'sk-******************...**weI8', service: 'OpenAI' },
   { id: '2', name: 'ElevenLabs Main', key: 'el-******************...**9zX4', service: 'ElevenLabs' },
+  { id: '3', name: 'Runway API Key', key: 'BoC1************************aEN7', service: 'RunwayML' },
 ];
 
 const ApiKeysSettings = () => {
@@ -26,7 +27,7 @@ const ApiKeysSettings = () => {
       id: Date.now().toString(),
       service,
       name,
-      key: `${key.substring(0, 3)}...${key.substring(key.length - 4)}`,
+      key: `${key.substring(0, 4)}...${key.substring(key.length - 4)}`,
     };
     setApiKeys(prev => [...prev, newKey]);
     showSuccess(`API Key for ${service} has been added.`);
