@@ -14,6 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface Project {
   id: number;
@@ -91,10 +96,17 @@ const ProjectCard = ({ project, onDelete, onCopy }: ProjectCardProps) => {
 
         {/* Edit Button */}
         <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white h-8" onClick={() => navigate('/script-editor')}>
-                <Pencil className="mr-2 h-3 w-3" />
-                Edit
-            </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white h-8" onClick={() => navigate('/script-editor')}>
+                  <Pencil className="mr-2 h-3 w-3" />
+                  Edit
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-black text-white border-black">
+              <p>Modify your project's details or content.</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Progress Dot */}
