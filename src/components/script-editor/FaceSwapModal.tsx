@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowRight, ImageUp, X } from "lucide-react";
+import { ArrowRight, ImageUp } from "lucide-react";
 
 interface FaceSwapModalProps {
   open: boolean;
@@ -36,12 +36,8 @@ const FaceSwapModal = ({ open, onOpenChange, character }: FaceSwapModalProps) =>
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1C1C22] border-gray-700 text-white sm:max-w-md p-0">
-        <DialogHeader className="p-6 pb-4 relative">
+        <DialogHeader className="p-6 pb-4">
           <DialogTitle>Face Swap</DialogTitle>
-          <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </button>
         </DialogHeader>
         <div className="px-6 pb-6 space-y-6">
           <div className="flex items-center justify-around">

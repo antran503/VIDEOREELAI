@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X } from "lucide-react";
 
 interface AddNewShotModalProps {
   open: boolean;
@@ -30,12 +29,8 @@ const AddNewShotModal = ({ open, onOpenChange, onAddShot }: AddNewShotModalProps
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1C1C22] border-gray-700 text-white sm:max-w-lg p-0">
-        <DialogHeader className="p-6 pb-4 relative">
+        <DialogHeader className="p-6 pb-4">
           <DialogTitle>Add New Shot</DialogTitle>
-          <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </button>
         </DialogHeader>
         <div className="p-6 space-y-4">
           <div>

@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, X, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { languages } from "@/data/languages";
 
@@ -56,12 +56,8 @@ const IdeaModal = ({ open, onOpenChange, onSuccess }: IdeaModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1C1C22] border-gray-700 text-white sm:max-w-[650px] p-0 rounded-lg">
-        <DialogHeader className="p-6 pb-0 relative">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-lg font-medium">Write your film idea (or synopsis)</DialogTitle>
-          <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </button>
         </DialogHeader>
         
         <div className="p-6 space-y-6">

@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { X } from "lucide-react";
 import { languages } from "@/data/languages";
 import { accents } from "@/data/accents";
 
@@ -29,12 +28,8 @@ const AddVoiceModal = ({ open, onOpenChange }: AddVoiceModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1C1C22] border-gray-700 text-white sm:max-w-lg p-0">
-        <DialogHeader className="p-6 pb-4 relative">
+        <DialogHeader className="p-6 pb-4">
           <DialogTitle>Add Voice</DialogTitle>
-          <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </button>
         </DialogHeader>
         <div className="px-6 pb-6 space-y-6">
           <div className="grid grid-cols-2 gap-4">
