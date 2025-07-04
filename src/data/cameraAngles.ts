@@ -6,4 +6,7 @@ export const cameraAngles = [
   { value: "worms-eye-view", label: "Worm's Eye View" },
   { value: "ots", label: "Over the Shoulder (OTS)" },
   { value: "dutch-angle", label: "Dutch Angle (Tilted Angle)" },
+  { value: "extreme-close-up", label: "Extreme Close-Up" },
+  { value: "wide-shot", label: "Wide Shot (Long Shot)" },
+  { value: "establishing-shot", label: "Establishing Shot" },
 ];
