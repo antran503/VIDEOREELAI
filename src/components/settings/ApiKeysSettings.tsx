@@ -15,7 +15,7 @@ interface ApiKey {
 const initialApiKeys: ApiKey[] = [
   { id: '1', name: 'My OpenAI Key', key: 'sk-******************...**weI8', service: 'OpenAI' },
   { id: '2', name: 'ElevenLabs Main', key: 'el-******************...**9zX4', service: 'ElevenLabs' },
-  { id: '3', name: 'Runway API Key', key: 'BoC1************************aEN7', service: 'RunwayML' },
+  { id: '3', name: 'Runware API Key', key: 'BoC1************************aEN7', service: 'Runware' },
 ];
 
 const ApiKeysSettings = () => {

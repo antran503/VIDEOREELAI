@@ -12,7 +12,7 @@ import { Sparkles, Pencil, X, GripVertical, RefreshCw, Play, ChevronDown, Loader
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { characters as mockCharacters } from "@/data/characters";
-import { generateImageFromPrompt } from "@/services/runwayService";
+import { generateImageFromPrompt } from "@/services/runwareService";
 import { showLoading, dismissToast, showSuccess, showError } from "@/utils/toast";
 
 const ShotCard = ({ shot, index, onUpdateShotImage }: { shot: any, index: number, onUpdateShotImage: (shotId: number, newImage: string) => void }) => {
@@ -31,7 +31,7 @@ const ShotCard = ({ shot, index, onUpdateShotImage }: { shot: any, index: number
 
   const handleGenerateImage = async () => {
     setIsGenerating(true);
-    const toastId = showLoading("Đang tạo ảnh với Runway...");
+    const toastId = showLoading("Đang tạo ảnh với Runware...");
     try {
       const newImageUrl = await generateImageFromPrompt(shot.prompt);
       onUpdateShotImage(shot.id, newImageUrl);
